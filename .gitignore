@@ -1,0 +1,7 @@
+*.smdh
+*.3dsx
+build/
+.ycm*
+*.elf
+*.swp
+export/
