@@ -17,14 +17,15 @@ void 	reloadPokemon(t_stinf *state)
 
 void 	pkmSelectInit(t_stinf *state)
 {
-  consoleSelect(state->console[1]);
+  consoleSelect(&state->pch->bot);
   consoleClear();
 
   if (state->inState)
   {
     state->inState = 0;
-    reloadPokemon(state);
   }
+  
+  reloadPokemon(state);
 }
 
 void 	pkmSelectDisplay(t_stinf *state)
@@ -34,9 +35,15 @@ void 	pkmSelectDisplay(t_stinf *state)
   printf("Select a slot :\n");
   printf("Box %-2d Slot %-2d\n", state->pkmSlot / 30 + 1, state->pkmSlot % 30 + 1);
   if (state->pkm.pkx.species)
+  {
+    state->empty = 0;
     printf("%-12s\n", pkData.species[state->pkm.pkx.species]);
+  }
   else
+  {
+    state->empty = 1;
     printf("Empty       \n");
+  }
   for (int i = 0; i < 22; i++)
     printf("\n");
   for (int i = 0; i < 40; i++)
@@ -44,7 +51,12 @@ void 	pkmSelectDisplay(t_stinf *state)
   printf("DPad Left/Right : Previous/Next Slot\n");
   printf("DPad Up/Down    : Previous/Next Box\n");
   printf("A : Select Slot |   Start : Quit\n");
-  printf("Select : Export Save");
+  char* logged = "Log In ";
+  if (state->loggedIn == 1)
+  {
+      logged = "Log Out";
+  }
+  printf(concatinate("Select : Save   |   B : ", logged));
 }
 
 void 	pkmSelectInput(t_stinf *state)
@@ -59,11 +71,24 @@ void 	pkmSelectInput(t_stinf *state)
   }
   if (kPressed & KEY_SELECT)
   {
-    state->cont = -1;
+    u8 src[232];
+    if (state->loggedIn == 1)
+    {
+        internet_access(1, 930, state, src, 50);                        
+    }
+    consoleSelect(&state->pch->top);
+    exportSave(state->pch->save, state->pch->game, &state->pch->sav.handle, &state->pch->sav.arch);
+    consoleSelect(&state->pch->bot);
     return;
   }
   if (kPressed & KEY_A)
-  { switchState(state, pkmGeneralState); state->modded = 0; return;}
+  {
+      switchState(state, pkmGeneralState); 
+      state->modded = 0; 
+      return;
+  }
+  if (kPressed & KEY_B)
+  { switchState(state, pkmLoginState); state->modded = 0; return;}
   if (kPressed & KEY_LEFT)
     slotChange -= 1;
   if (kPressed & KEY_RIGHT)
@@ -77,8 +102,13 @@ void 	pkmSelectInput(t_stinf *state)
     state->pkmSlot += slotChange;
     if (state->pkmSlot < 0)
       state->pkmSlot = 0;
-    if (state->pkmSlot >= 930)
-      state->pkmSlot = 929;
+    s16 maxSlot = 929;
+    if (state->loggedIn == 1)
+    {
+        maxSlot = 1199;
+    }
+    if (state->pkmSlot > maxSlot)
+      state->pkmSlot = maxSlot;
     reloadPokemon(state);
   }
 }

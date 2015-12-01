@@ -108,6 +108,7 @@ struct s_data
   u8 	species[722][12];
   u8 	items[775][17];
   u8 	balls[26][13];
+  u8 	natures[25][8];
 } pkData;
 
 struct s_pkm
@@ -123,7 +124,9 @@ s8 	setPkmSpecies(struct s_pkm *pkm, u16 species);
 s32     decryptPokemon(u8 *enc, u8 *dec);
 s32    	encryptPokemon(u8 *dec, u8 *enc);
 u8 	getPkmIV(u32 individualValues, u8 stat);
+u8 	getPkmEgg(u32 individualValues);
 s8 	setPkmIV(u8 val, u8 stat, struct s_pkm *pkm);
+s8 	setPkmEgg(struct s_pkm *pkm);
 s8 	setPkmLevel(struct s_pkm *, u8 level);
 s8 	pkmRecalc(struct s_pkm *);
 
@@ -135,7 +138,7 @@ s8 	getPkmGender(struct s_pkm *);
 s8 	setPkmGender(struct s_pkm *pkm, u8 gender);
 
 s8 	rerollPID(struct s_pkm *);
-s8 	rerollPIDspe(struct s_pkm *, u8 shiny, u8 gender, u32 personality, u16 trainerID, u16 trainerSecretID);
+s8 	rerollPIDspe(struct s_pkm *, u8 shiny, u8 gender);
 
 s8 	isShiny(struct s_pkm *);
 

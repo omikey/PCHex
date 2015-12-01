@@ -81,18 +81,18 @@ s32 	rewriteSaveCHK(u8 *save, u8 game)
 
 s32 	backupSave(u8 *save, u8 game, Handle *fshdl, FS_archive *fsarch)
 {
-//  char 	dir[] = "/3ds/PCHex/";
-//  char 	path[100];
-//  u32 	len = game ? 0x76000 : 0x65600;
-//  u32 	bytesWritten;
-//  s32 	ret;
-//
-//  printf("Backing save up...");
-//  sprintf(path, "%smain");
-//  ret = saveFile(path, save, len, fsarch, fshdl, &bytesWritten); //actually write the file
-//  if (ret) return ret;
-//  printf(" OK\n");
-//  printf("backed save up to %s\n", path);
+  char 	dir[] = "/3ds/PCHex/";
+  char 	path[100];
+  u32 	len = game ? 0x76000 : 0x65600;
+  u32 	bytesWritten;
+  s32 	ret;
+
+  printf("Backing save up...");
+  sprintf(path, "%smain_%d", dir,(int) time(NULL));
+  ret = saveFile(path, save, len, fsarch, fshdl, &bytesWritten); //actually write the file
+  if (ret) return ret;
+  printf(" OK\n");
+  printf("backed save up to %s\n", path);
   return 0;
 }
 
@@ -119,7 +119,7 @@ s32 	loadSave(u8 *save, Handle *fshdl, FS_archive *fsarch)
   s32 	ret;
 
   printf("Loading savefile...");
-  ret = loadFile(path, save, fsarch, fshdl, 0xEB000, &bytesRead); //actually loading the file
+  ret = loadFile(path, save, fsarch, fshdl, 0xF8A00, &bytesRead); //actually loading the file
   if (ret) return -1;
   printf(" OK, read %ld bytes\n", bytesRead);
   return (getGame(bytesRead)); //we return the which game was found

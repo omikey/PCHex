@@ -16,12 +16,12 @@ char helpstringsGen[20][3][50] = {
     "A : Select field ",
     "Start : Back" },
   {"","A : Choose Species","B : Leave field"},
-  { "", "X : Set Species as Nickname", "B : Leave field" },
+  {"Y : Choose Nickname", "X : Set Species as Nickname", "B : Leave field"},
   {"X : Reroll","Y : Shinify","B : Leave field"},
   {"","Up/Down : Add/Substract a level","B : Leave field"},
-  {"","","B : Leave field"},
-  {"","","B : Leave field"},
-  {"","Up/Down/Left/Right : Modify value","B : Leave field"},
+  {"","Y : Choose OT","B : Leave field"},
+  {"","Y : Choose Handler","B : Leave field"},
+  {"A : Egg Switch","Up/Down/Left/Right : Modify value","B : Leave field"},
   {"","Up/Down/Left/Right : Modify value","B : Leave field"},
   {"","","B : Leave field"},
   {"","","B : Leave field"},
@@ -69,7 +69,7 @@ void 	pkmGeneralTrainerDisplay(t_stinf *state)
   printf("Handler:%-12s", getHdlName(tmp, &state->pkm));
 
   selectColor(7, ist, sel);
-  printf("Friendship:%-3d", pkx->trainerFriendship);
+  printf("Friendship/Egg:%-3d", pkx->trainerFriendship);
   resetColor(); printf("%-6s", "");
   selectColor(8, ist, sel);
   printf("Friendship:%-3d\n", pkx->handlerFriendship);

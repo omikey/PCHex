@@ -175,22 +175,20 @@ s8 	rerollPID(struct s_pkm *pkm)
   return 0;
 }
 
-s8 	rerollPIDspe(struct s_pkm *pkm, u8 shiny, u8 gender, u32 personality, u16 trainerID, u16 trainerSecretID)
+s8 	rerollPIDspe(struct s_pkm *pkm, u8 shiny, u8 gender)
 {
-  for (int i = 0; i < 1; i++)
+  u8 	gendercond;
+  u8	shinycond;
+  for (int i = 0; i < 80000; i++)
   {
-      // state->cpy.pkx.species
-      pkm->pkx.personalityID = personality;
-      pkm->pkx.trainerID = trainerID;
-      pkm->pkx.trainerSecretID = trainerSecretID;
-//    rerollPID(pkm);
-//    shinycond = 0;
-//    if (shiny == 2 || pkm->isShiny == shiny)
-//      shinycond = 1;
-//    gendercond = 0;
-//    if (gender == 2 || pkm->gender == gender)
-//      gendercond = 1;
-//    if (shinycond && gendercond)
+    rerollPID(pkm);
+    shinycond = 0;
+    if (shiny == 2 || pkm->isShiny == shiny)
+      shinycond = 1;
+    gendercond = 0;
+    if (gender == 2 || pkm->gender == gender)
+      gendercond = 1;
+    if (shinycond && gendercond)
       return 0;
   }
   return -1;
@@ -292,9 +290,27 @@ s8 	setPkmIV(u8 val, u8 stat, struct s_pkm *pkm)
   return 0;
 }
 
+s8 	setPkmEgg(struct s_pkm *pkm)
+{
+  u32 	iv32 = pkm->pkx.individualValues;
+  u8 	nval = getPkmEgg(iv32);
+  u32 	mask = 0xFFFFFFFF;
+  mask ^= 0x40000000;
+  
+  setu16Name(nval ? pkData.species[pkm->pkx.species] : pkData.species[0], pkm->pkx.nickname);
+  iv32 = (iv32 & mask) | (nval ? 0 : 0x40000000 );
+  pkm->pkx.individualValues = iv32;
+  return 0;
+}
+
 u8 	getPkmIV(u32 individualValues, u8 stat)
 {
   return (individualValues >> (5 * stat)) & 0x1F;
+}
+
+u8      getPkmEgg(u32 individualValues)
+{
+  return ((individualValues >> 30) & 1) == 1;
 }
 
 u16 	calcPkmStat(u16 species, u8 IV, u8 EV, u8 nature, u8 level, u8 stat, u8 form)

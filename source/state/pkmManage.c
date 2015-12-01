@@ -87,15 +87,18 @@ void 	pkmManageInput(t_stinf *state)
     switch(state->inState)
     {
       case 1:
+        //state->pkm.pkx.nature = rand() % 25;
 	savePokemon(state, state->pkmSlot, (u8 *) &state->pkm.pkx);
 	state->modded = 0;
 	break;
       case 2:
-	state->cpy = state->pkm;
+	state->cpy = state->pkm; 
+        //  internet_access(1, state->pkmSlot, state);
 	break;
       case 3:
 	state->pkm = state->cpy;
 	state->modded = 1;
+        //  internet_access(2, state->pkmSlot, state);
 	break;
     }
   }

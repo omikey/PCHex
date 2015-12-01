@@ -63,9 +63,19 @@ void 	printEditable(struct s_overlay *over)
       break;
     if (over->dataIndex == i)
       printf("\x1B[7m");
-    printf("\x1B[%d;1H%s", i + 6, over->data + over->foundIndex[i] * over->entrylen);
+    printf("\x1B[%d;1H%s", i + 5, over->data + over->foundIndex[i] * over->entrylen);
     printf("\x1B[0m");
   }
+  printf("\x1B[15;1H\x1B[2m");
+  if (over->dataIndex < 0)
+  {
+    printf("U/D:Change  Start:List\n");
+    printf("\x1B[16;1HA:Add char  B:Rem Char");
+  } else {
+    printf("U/D:Change  A:Choose\n");
+    printf("\x1B[16;1HB:Back");
+  }
+  printf("\x1B[0m");
 }
 
 s8	inputOverlay(struct s_overlay *over)
@@ -222,6 +232,72 @@ s16	overlayGetpkm()
   return over.foundIndex[over.dataIndex];
 }
 
+char*	overlayGet(char * title)
+{
+  struct s_overlay 	over;
+  char			tmp[12];
+
+  strcpy(over.list, " abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()'");
+  strcpy(over.title, concatinate("Choose a", title));
+  over.dst = tmp;
+  over.maxlen = 12;
+  over.offs = 0;
+  over.index = 0;
+  over.dataIndex = -1;
+  over.data = tmp;
+  over.entrylen = 12;
+  over.datacount = 1;
+  over.foundIndex[0] = -1;
+  memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
+  launchOverlay(&over);
+  return concatinate("", tmp);
+}
+
+char*	overlayGetLogin()
+{
+  struct s_overlay 	over;
+  char			tmp[12];
+
+  strcpy(over.list, "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()'");
+  strcpy(over.title, "Choose a Login");
+  over.dst = tmp;
+  over.maxlen = 12;
+  over.offs = 0;
+  over.index = 0;
+  over.dataIndex = -1;
+  over.data = tmp;
+  over.entrylen = 12;
+  over.datacount = 1;
+  over.foundIndex[0] = -1;
+  memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
+  launchOverlay(&over);
+  return concatinate("", tmp);
+}
+
+char*	overlayGetPassword()
+{
+  struct s_overlay 	over;
+  char			tmp[12];
+
+  strcpy(over.list, "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()'");
+  strcpy(over.title, "Choose a Password");
+  over.dst = tmp;
+  over.maxlen = 12;
+  over.offs = 0;
+  over.index = 0;
+  over.dataIndex = -1;
+  over.data = tmp;
+  over.entrylen = 12;
+  over.datacount = 1;
+  over.foundIndex[0] = -1;
+  memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
+  launchOverlay(&over);
+  return concatinate("", tmp);
+}
+
 s16	overlayGetMove()
 {
   struct s_overlay 	over;
@@ -309,6 +385,30 @@ s16	overlayGetBalls()
   over.data = pkData.balls[0];
   over.entrylen = 13;
   over.datacount = 26;
+  over.foundIndex[0] = -1;
+  memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
+  doSearch(&over);
+  launchOverlay(&over);
+  if (over.dataIndex < 0)
+    return -1;
+  return over.foundIndex[over.dataIndex];
+}
+
+s16	overlayGetNature()
+{
+  struct s_overlay 	over;
+  char			tmp[12];
+
+  strcpy(over.list, "abcdefghijklmnopqrstuvwxyz");
+  strcpy(over.title, "Choose a Nature");
+  over.dst = tmp;
+  over.maxlen = 12;
+  over.offs = 0;
+  over.index = 0;
+  over.dataIndex = -1;
+  over.data = pkData.natures[0];
+  over.entrylen = 8;
+  over.datacount = 25;
   over.foundIndex[0] = -1;
   memcpy(&over.win, consoleGetDefault(), sizeof(PrintConsole));
   doSearch(&over);
